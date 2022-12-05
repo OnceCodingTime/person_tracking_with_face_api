@@ -2,7 +2,9 @@ api_key.txt
 .vscode/
 
 # interpreter bytecode
-__pycache__/
+*__pycache__/
+*.ipynb_checkpoints
+
 
 # experiment results
 runs/
