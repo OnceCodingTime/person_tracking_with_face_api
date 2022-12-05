@@ -1,0 +1,18 @@
+api_key.txt
+.vscode/
+
+# interpreter bytecode
+__pycache__/
+
+# experiment results
+runs/
+
+# evaluation tools folder
+val_utils/
+
+# exports
+*_openvino_model
+*.torchscript
+*.pt
+*.onnx
+*.engine
