@@ -18,8 +18,11 @@ def thread_face_reg_and_tts(file_path, id):
     t.start()
 
 def get_text2mp3(text,filename):
-    with open(filename, "wb") as f:
-        f.write(api.thai_thaitts_kaitom(text).content)
+    tts_response = api.thai_thaitts_kaitom(text)
+    if tts_response.status_code == 200:
+        tts_content = tts_response.content
+        with open(filename, "wb") as f:
+            f.write(tts_content)
 
 def play_mp3(filename):
     p = vlc.MediaPlayer(filename)
@@ -37,16 +40,20 @@ def face_recognition(file_path, id):
             res_json = result.json()
             person_name = res_json['name']
 
-            if person_name != 'unknown':
-                if person_name not in mp3_filenames:
-                    filename = f"{path}/name-{len(mp3_filenames):03}.mp3"
-                    text = 'สวัสดีครับ คุณ'+person_name
-                    get_text2mp3(text=text,filename=filename)
-                    mp3_filenames.update({person_name:filename})
+            if person_name not in mp3_filenames:
+                filename = f"{path}/name-{len(mp3_filenames):03}.mp3"
+                if person_name == 'unknown':
+                    text = 'สวัสดีครับ'
                 else:
-                    filename = mp3_filenames[person_name]
+                    text = 'สวัสดีครับ คุณ'+person_name
+                get_text2mp3(text=text,filename=filename)
+                mp3_filenames.update({person_name:filename})
+            else:
+                filename = mp3_filenames[person_name]
                 
                 play_mp3(filename)
                 id_spoke.append(id)
+        else:
+            print(result.text)
         id_speaking.append(id)
 
